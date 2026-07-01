@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PeekGram</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0a0a0f;--surface:#13131a;--border:#1e1e2e;--accent:#7c3aed;--accent2:#ec4899;--text:#f0f0f5;--muted:#6b7280;--card:#16161f}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:3rem 1.25rem 4rem}
+    .logo{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1.5rem}
+    h1{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:800;letter-spacing:-1.5px;text-align:center;margin-bottom:.75rem;line-height:1.15}
+    h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .sub{color:var(--muted);font-size:.95rem;margin-bottom:2rem;text-align:center}
+    .box{width:100%;max-width:520px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:1.5rem;box-shadow:0 0 60px rgba(124,58,237,.15)}
+    .row{display:flex;gap:10px}
+    input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:.875rem 1rem;color:var(--text);font-size:1rem;outline:none;direction:ltr}
+    input::placeholder{color:#3f3f5a}
+    input:focus{border-color:var(--accent)}
+    .btn{background:linear-gradient(135deg,var(--accent),#6d28d9);color:#fff;border:none;border-radius:10px;padding:.875rem 1.4rem;font-size:.95rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,.4);white-space:nowrap}
+    .note{display:flex;justify-content:center;gap:20px;margin-top:10px;font-size:.75rem;color:#4b5563}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;width:100%;max-width:520px;animation:fadeUp .4s ease forwards}
+    .ph{display:flex;align-items:center;gap:16px;padding:1.25rem 1.25rem .75rem}
+    .av{width:76px;height:76px;border-radius:50%;padding:2.5px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);flex-shrink:0}
+    .av img{width:100%;height:100%;object-fit:cover;border-radius:50%;border:2px solid var(--card);display:block}
+    .av-fb{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:#fff}
+    .meta{flex:1;text-align:right}
+    .meta h3{font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+    .vbadge{display:inline-flex;width:18px;height:18px;background:#3b82f6;border-radius:50%;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700}
+    .handle{font-size:.85rem;color:var(--muted);margin-top:2px;direction:ltr;text-align:right}
+    .bio{font-size:.82rem;color:#9ca3af;line-height:1.55;margin-top:6px;white-space:pre-line}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .stat{padding:.9rem .5rem;text-align:center;border-left:1px solid var(--border)}
+    .stat:last-child{border-left:none}
+    .stat strong{display:block;font-size:1.1rem;font-weight:700}
+    .stat small{font-size:.72rem;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+    .pt{aspect-ratio:1;overflow:hidden;position:relative;cursor:pointer;background:#1a1a2e}
+    .pt img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+    .pt:hover img{transform:scale(1.07)}
+    .ov{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;font-weight:700;font-size:13px;opacity:0;transition:opacity .25s}
+    .pt:hover .ov{opacity:1}
+    .cta{display:block;width:calc(100% - 2.5rem);margin:1rem 1.25rem 1.25rem;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;padding:.85rem;font-size:.95rem;font-weight:700;cursor:pointer}
+    .loader{display:flex;flex-direction:column;align-items:center;gap:12px;padding:2rem;color:var(--muted)}
+    .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+    .err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:1rem 1.5rem;color:#ef4444;font-size:.9rem;max-width:520px;width:100%;text-align:center}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:500px){.row{flex-direction:column}.btn{width:100%}}
+  </style>
+</head>
+<body>
+  <div class="logo">PeekGram</div>
+  <h1>شوف أي حساب <span>بلا ما تظهر</span></h1>
+  <p class="sub">بيانات حقيقية — صورة البروفيل، المتابعين، والمنشورات</p>
+
+  <div class="box">
+    <div class="row">
+      <input id="inp" type="text" placeholder="@username" onkeydown="if(event.key==='Enter')search()"/>
+      <button class="btn" onclick="search()">بحث</button>
+    </div>
+    <div class="note">
+      <span>🔒 مجهول</span>
+      <span>⚡ حقيقي</span>
+      <span>📊 إنستغرام</span>
+    </div>
+  </div>
+
+  <div id="out"></div>
+
+  <script>
+    function fmt(n){
+      if(!n)return"0";
+      const x=typeof n==="string"?parseInt(n.replace(/,/g,"")):n;
+      if(isNaN(x))return String(n);
+      if(x>=1e6)return(x/1e6).toFixed(1)+"M";
+      if(x>=1e3)return(x/1e3).toFixed(1)+"K";
+      return x.toString();
+    }
+
+    async function search(){
+      const raw=document.getElementById("inp").value.trim().replace(/^@/,"");
+      if(!raw)return;
+      const out=document.getElementById("out");
+      out.innerHTML=`<div class="loader"><div class="spinner"></div><span>جاري البحث عن @${raw}...</span></div>`;
+
+      try{
+        const res=await fetch("/api/profile",{
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({username:raw})
+        });
+        const data=await res.json();
+        if(!data.user)throw new Error("not found");
+        render(data.user, data.posts||[]);
+      }catch(e){
+        out.innerHTML=`<div class="err">⚠️ ما لقيناش هاد الحساب أو وقع خطأ. عاود المحاولة.</div>`;
+      }
+    }
+
+    function render(u, posts){
+      const avatar = u.profile_pic_url_hd||u.profile_pic_url||"";
+      const name = u.full_name||u.username||"";
+      const followers = fmt(u.follower_count||u.edge_followed_by?.count);
+      const following = fmt(u.following_count||u.edge_follow?.count);
+      const mediaCount = fmt(u.media_count||u.edge_owner_to_timeline_media?.count);
+      const verified = u.is_verified||false;
+      const bio = u.biography||"";
+
+      const avHtml = avatar
+        ? `<img src="${avatar}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="av-fb" style="display:none">${name[0]||"?"}</div>`
+        : `<div class="av-fb">${name[0]||"?"}</div>`;
+
+      const postsHtml = posts.slice(0,6).map(p=>{
+        const img=p.image_versions?.items?.[0]?.url||p.thumbnail_url||p.display_url||p.media_url||"";
+        const lk=fmt(p.like_count||p.edge_media_preview_like?.count||0);
+        const cm=fmt(p.comment_count||p.edge_media_to_comment?.count||0);
+        return `<div class="pt">${img?`<img src="${img}" loading="lazy"/>`:""}<div class="ov">❤️ ${lk} &nbsp; 💬 ${cm}</div></div>`;
+      }).join("");
+
+      document.getElementById("out").innerHTML=`
+        <div class="card">
+          <div class="ph">
+            <div class="av">${avHtml}</div>
+            <div class="meta">
+              <h3>${verified?'<span class="vbadge">✓</span>':""} ${name}</h3>
+              <div class="handle">@${u.username}</div>
+              ${bio?`<div class="bio">${bio}</div>`:""}
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat"><strong>${mediaCount}</strong><small>منشور</small></div>
+            <div class="stat"><strong>${followers}</strong><small>متابع</small></div>
+            <div class="stat"><strong>${following}</strong><small>يتابع</small></div>
+          </div>
+          ${u.is_private?`<div style="padding:1.5rem;text-align:center;color:var(--muted)">🔒 هذا الحساب خاص</div>`:""}
+          ${postsHtml?`<div class="grid">${postsHtml}</div>`:""}
+          <button class="cta">👁️ شوف كل المحتوى بشكل مجهول</button>
+        </div>`;
+    }
+  </script>
+</body>
+</html>
