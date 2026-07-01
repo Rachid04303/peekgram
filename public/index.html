@@ -89,7 +89,7 @@
         const res=await fetch("https://peekgram-omega.vercel.app/api/profile",{
           method:"POST",
           headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({username:raw})
+          body:JSON.stringify({username:raw,maxId:""})})
         });
         const data=await res.json();
         if(!data.user)throw new Error("not found");
