@@ -86,7 +86,7 @@
       out.innerHTML=`<div class="loader"><div class="spinner"></div><span>جاري البحث عن @${raw}...</span></div>`;
 
       try{
-        const res=await fetch("/api/profile",{
+        const res=await fetch("https://peekgram-omega.vercel.app/api/profile",{
           method:"POST",
           headers:{"Content-Type":"application/json"},
           body:JSON.stringify({username:raw})
