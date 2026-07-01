@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
     const userData = await userRes.json();
 
-    const user = userData?.data?.user || userData?.user || userData?.data || userData;
+    const user = userData?.result?.[0]?.user || userData?.data?.user || userData?.user || userData;;
 
     let posts = [];
     if (user && !user.is_private) {
